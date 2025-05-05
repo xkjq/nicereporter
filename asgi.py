@@ -5,4 +5,4 @@ from nicegui import ui
 def main_page() -> None:
     main()
 
-ui.run(port=5129)
+ui.run(port=5129, route_path="/reporter/")
