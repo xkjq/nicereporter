@@ -5,6 +5,7 @@ def main():
     ui.label('Report Generatort')
     ui.button('Stroke', on_click=lambda: ui.navigate.to('/report_stroke'))
     ui.button('Stroke', on_click=lambda: ui.navigate.to('/report_stroke'))
+    ui.button('Stroke', on_click=lambda: ui.navigate.to('/report_stroke'))
 
     @ui.page('/about')
     def about_page():
