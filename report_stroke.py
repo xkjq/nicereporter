@@ -30,16 +30,16 @@ def report_stroke():
         )
         if answers['ica_disease'] == 'YES':
             formatted_text += (
-                f"Side of ICA disease: {answers['ica_side']}\n"
+                f"- Side of ICA disease: {answers['ica_side']}\n"
             )
             if answers['quantify_stenosis'] == 'YES':
                 formatted_text += (
-                    f"Left ICA stenosis: {answers['left_stenosis']}\n"
-                    f"Right ICA stenosis: {answers['right_stenosis']}\n"
+                    f"-- Left ICA stenosis: {answers['left_stenosis']}\n"
+                    f"-- Right ICA stenosis: {answers['right_stenosis']}\n"
                 )
             elif answers['quantify_stenosis'] == 'NO':
                 formatted_text += (
-                    "Please discuss with a Vascular Radiologist and consider contemporaneous duplex imaging if the patient is a candidate for Carotid endarterectomy.\n"
+                    "- Please discuss with a Vascular Radiologist and consider contemporaneous duplex imaging if the patient is a candidate for Carotid endarterectomy.\n"
                 )
         result_box.value = formatted_text
 
@@ -58,6 +58,15 @@ def report_stroke():
             'left_stenosis': '',
             'right_stenosis': ''
         })
+        # Reset UI elements
+        haemorrhage_radio.value = 'NO'
+        ischaemia_radio.value = 'NO'
+        lvo_radio.value = 'NO'
+        ica_disease_radio.value = 'NO'
+        ica_side_row.visible = False
+        quantify_stenosis_row.visible = False
+        left_stenosis_row.visible = False
+        right_stenosis_row.visible = False
         update_result()
 
     # Add the "Normal" button
@@ -65,7 +74,7 @@ def report_stroke():
 
     with ui.row():
         ui.label('There is evidence of intracranial haemorrhage')
-        ui.radio(['YES', 'NO'], on_change=lambda e: (answers.update({'haemorrhage': e.value}), update_result())).props('inline')
+        haemorrhage_radio = ui.radio(['YES', 'NO'], on_change=lambda e: (answers.update({'haemorrhage': e.value}), update_result())).props('inline')
         custom_input_haemorrhage = ui.input('Custom text', on_change=lambda e: (custom_text.update({'haemorrhage': e.value}), update_result()))
         custom_input_haemorrhage.visible = False
         toggle_button = ui.button(icon='add', on_click=lambda: toggle_visibility(toggle_button, custom_input_haemorrhage)).props('flat dense')
@@ -73,7 +82,7 @@ def report_stroke():
 
     with ui.row():
         ui.label('There is evidence of acute ischaemia')
-        ui.radio(['YES', 'NO'], on_change=lambda e: (answers.update({'ischaemia': e.value}), update_result())).props('inline')
+        ischaemia_radio = ui.radio(['YES', 'NO'], on_change=lambda e: (answers.update({'ischaemia': e.value}), update_result())).props('inline')
         custom_input_ischaemia = ui.input('Custom text', on_change=lambda e: (custom_text.update({'ischaemia': e.value}), update_result()))
         custom_input_ischaemia.visible = False
         toggle_button = ui.button(icon='add', on_click=lambda: toggle_visibility(toggle_button, custom_input_ischaemia)).props('flat dense')
@@ -81,7 +90,7 @@ def report_stroke():
 
     with ui.row():
         ui.label('There is an intracranial LVO')
-        ui.radio(['YES', 'NO'], on_change=lambda e: (answers.update({'lvo': e.value}), update_result())).props('inline')
+        lvo_radio = ui.radio(['YES', 'NO'], on_change=lambda e: (answers.update({'lvo': e.value}), update_result())).props('inline')
         custom_input_lvo = ui.input('Custom text', on_change=lambda e: (custom_text.update({'lvo': e.value}), update_result()))
         custom_input_lvo.visible = False
         toggle_button = ui.button(icon='add', on_click=lambda: toggle_visibility(toggle_button, custom_input_lvo)).props('flat dense')
@@ -89,7 +98,7 @@ def report_stroke():
 
     with ui.row():
         ui.label('There is significant extracranial internal carotid artery disease')
-        ui.radio(['YES', 'NO'], on_change=lambda e: (answers.update({'ica_disease': e.value}), update_result(), toggle_ica_options(e.value))).props('inline')
+        ica_disease_radio = ui.radio(['YES', 'NO'], on_change=lambda e: (answers.update({'ica_disease': e.value}), update_result(), toggle_ica_options(e.value))).props('inline')
 
     # Additional options for ICA disease
     def toggle_ica_options(value):
@@ -126,5 +135,10 @@ def report_stroke():
         ui.radio(['Unobstructed', 'Less than 50%', '50 to 70%', '70 to 90%', 'Greater than 90%', 'Occluded'], on_change=lambda e: (answers.update({'right_stenosis': e.value}), update_result())).props('inline')
 
     # Text box to display the selected answers
-    result_box = ui.textarea('Selected Answers:', value='').props('rows=10 style="width: 100%;" readonly')
+    result_box = ui.textarea('Report text:', value='').props('rows=10 style="width: 100%;" readonly')
 
+    # Add a button to copy the result_box content to the clipboard
+    def copy_to_clipboard():
+        ui.run_javascript(f'navigator.clipboard.writeText(`{result_box.value}`)')
+
+    ui.button('Copy to Clipboard', on_click=copy_to_clipboard).props('flat')
