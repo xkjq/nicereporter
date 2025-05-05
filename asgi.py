@@ -5,4 +5,4 @@ from nicegui import ui
 def main_page() -> None:
     main()
 
-app = ui.get_app()  # Expose the NiceGUI app as an ASGI application
+ui.run(port=5129)
