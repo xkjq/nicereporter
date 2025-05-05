@@ -5,4 +5,4 @@ from nicegui import ui
 def main_page() -> None:
     main()
 
-app = ui.run_with(uvicorn=False)  # Expose the app as an ASGI application
+app = ui.get_app()  # Expose the NiceGUI app as an ASGI application
