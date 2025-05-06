@@ -2,7 +2,7 @@ from nicegui import ui
 from report_stroke import report_stroke  # Import the report_stroke page
 
 def main():
-    ui.label('Report Generatort')
+    ui.label('Report Generator')
     ui.button('Stroke', on_click=lambda: ui.navigate.to('/report_stroke'))
 
     @ui.page('/about')

@@ -1,0 +1,30 @@
+
+name: Deploy to Live Server
+
+on:
+  push:
+    branches:
+      - main  # Trigger deployment on pushes to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Deploy to Server
+      run: |
+        ssh ross@penracourses.org.uk << 'EOF'
+        cd /home/ross/web/nicereporter
+        git pull origin main
+        source .venv/bin/activate
+        uv pip install -r requirements.txt
+        ../restart_nicereporter
+        EOF
