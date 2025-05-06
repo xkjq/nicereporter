@@ -1,4 +1,3 @@
-
 name: Deploy to Live Server
 
 on:
@@ -18,6 +17,10 @@ jobs:
       uses: webfactory/ssh-agent@v0.5.3
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Add Server to Known Hosts
+      run: |
+        ssh-keyscan -H penracourses.org.uk >> ~/.ssh/known_hosts
 
     - name: Deploy to Server
       run: |
