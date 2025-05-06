@@ -14,6 +14,7 @@ def main():
     def report_stroke_page():
         report_stroke()
 
+    # Test deployment
     ui.run(port=5129)
 
 if __name__ in {"__main__", "__mp_main__"}:
